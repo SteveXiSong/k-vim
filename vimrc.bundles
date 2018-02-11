@@ -29,6 +29,13 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
+" Steve added. Clang formatter.
+Plug 'rhysd/vim-clang-format'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'shaneharper/vim-rtags'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+""""""""""""""""""""""""""""""""
+
 " syntastic
 if v:version < 800
     Plug 'scrooloose/syntastic'
@@ -39,7 +46,7 @@ endif
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
 " Snippets are separated from the engine. Add this if you want them:
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " auto complete
 " 代码自动补全
@@ -53,7 +60,7 @@ Plug 'docunext/closetag.vim', { 'for': ['html', 'xml'] }
 
 " quick edit
 " 快速注释
-Plug 'scrooloose/nerdcommenter'
+" Plug 'scrooloose/nerdcommenter'
 
 
 " 快速加入修改环绕字符
@@ -69,11 +76,11 @@ Plug 'junegunn/vim-easy-align'
 " quick movement
 " easymotion
 "更高效的移动 [,, + w/fx/h/j/k/l]
-Plug 'Lokaltog/vim-easymotion'
+" Plug 'Lokaltog/vim-easymotion'
 
 " 更高效的行内移动, f/F/t/T, 才触发
 " quickscope
-Plug 'unblevable/quick-scope'
+" Plug 'unblevable/quick-scope'
 
 Plug 'vim-scripts/matchit.zip'
 " signature
@@ -83,12 +90,12 @@ Plug 'vim-scripts/matchit.zip'
 " m<Space>  del all marks
 " m/        list all marks
 " m.        add new mark just follow previous mark
-Plug 'kshenoy/vim-signature'
+" Plug 'kshenoy/vim-signature'
 
 " quick selection and edit
 " expandregion
 " 选中区块
-Plug 'terryma/vim-expand-region'
+" Plug 'terryma/vim-expand-region'
 " 多光标选中编辑
 " multiplecursors
 Plug 'terryma/vim-multiple-cursors'
@@ -97,7 +104,7 @@ Plug 'terryma/vim-multiple-cursors'
 " 文件搜索
 " change to https://github.com/ctrlpvim/ctrlp.vim
 " ctrlp ctrlpfunky
-Plug 'ctrlpvim/ctrlp.vim' | Plug 'tacahiroy/ctrlp-funky'
+Plug 'ctrlpvim/ctrlp.vim' "| Plug 'tacahiroy/ctrlp-funky'
 " ctrlsf
 " 类似sublimetext的搜索
 " In CtrlSF window:
@@ -293,80 +300,80 @@ call plug#end()
 
 " ################### 基础 ######################
 
-" syntastic {{{
-if has_key(g:plugs, 'syntastic')
-    " dependence
-    " 1. shellcheck `brew install shellcheck` https://github.com/koalaman/shellcheck
-
-    let g:syntastic_error_symbol='>>'
-    let g:syntastic_warning_symbol='>'
-    let g:syntastic_check_on_open=1
-    let g:syntastic_check_on_wq=0
-    let g:syntastic_enable_highlighting=1
-
-    " checkers
-    " python
-    " pip install flake8
-    let g:syntastic_python_checkers=['flake8', ] " 使用pyflakes,速度比pylint快
-    let g:syntastic_python_flake8_args='--ignore=E501,E225,E124,E712,E116,E131'
-
-    " javascript
-    " let g:syntastic_javascript_checkers = ['jsl', 'jshint']
-    " let g:syntastic_html_checkers=['tidy', 'jshint']
-    " npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard
-    " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
-    let g:syntastic_javascript_checkers = ['eslint']
-
-    " to see error location list
-    let g:syntastic_always_populate_loc_list = 1
-    let g:syntastic_enable_signs = 1
-    let g:syntastic_auto_loc_list = 0
-    let g:syntastic_auto_jump = 0
-    let g:syntastic_loc_list_height = 5
-
-    function! ToggleErrors()
-        let old_last_winnr = winnr('$')
-        lclose
-        if old_last_winnr == winnr('$')
-            " Nothing was closed, open syntastic_error location panel
-            Errors
-        endif
-    endfunction
-    nnoremap <Leader>s :call ToggleErrors()<cr>
-
-    " ,en ,ep to jump between errors
-    function! <SID>LocationPrevious()
-    try
-        lprev
-    catch /^Vim\%((\a\+)\)\=:E553/
-        llast
-    endtry
-    endfunction
-
-    function! <SID>LocationNext()
-    try
-        lnext
-    catch /^Vim\%((\a\+)\)\=:E553/
-        lfirst
-    endtry
-    endfunction
-
-    nnoremap <silent> <Plug>LocationPrevious    :<C-u>exe 'call <SID>LocationPrevious()'<CR>
-    nnoremap <silent> <Plug>LocationNext        :<C-u>exe 'call <SID>LocationNext()'<CR>
-    nmap <silent> <Leader>ep    <Plug>LocationPrevious
-    nmap <silent> <Leader>en    <Plug>LocationNext
-
-    " 修改高亮的背景色, 适应主题
-    highlight SyntasticErrorSign guifg=white guibg=black
-
-    " 禁止插件检查java
-    " thanks to @marsqing, see https://github.com/wklken/k-vim/issues/164
-    let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java'] }
-
-    " 关闭syntastic语法检查, 鼠标复制代码时用到, 防止把错误标志给复制了
-    nnoremap <silent> <Leader>ec :SyntasticToggleMode<CR>
-endif
-" }}}
+" " syntastic {{{
+" if has_key(g:plugs, 'syntastic')
+"     " dependence
+"     " 1. shellcheck `brew install shellcheck` https://github.com/koalaman/shellcheck
+" 
+"     let g:syntastic_error_symbol='>>'
+"     let g:syntastic_warning_symbol='>'
+"     let g:syntastic_check_on_open=1
+"     let g:syntastic_check_on_wq=0
+"     let g:syntastic_enable_highlighting=1
+" 
+"     " checkers
+"     " python
+"     " pip install flake8
+"     let g:syntastic_python_checkers=['flake8', ] " 使用pyflakes,速度比pylint快
+"     let g:syntastic_python_flake8_args='--ignore=E501,E225,E124,E712,E116,E131'
+" 
+"     " javascript
+"     " let g:syntastic_javascript_checkers = ['jsl', 'jshint']
+"     " let g:syntastic_html_checkers=['tidy', 'jshint']
+"     " npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard
+"     " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
+"     let g:syntastic_javascript_checkers = ['eslint']
+" 
+"     " to see error location list
+"     let g:syntastic_always_populate_loc_list = 1
+"     let g:syntastic_enable_signs = 1
+"     let g:syntastic_auto_loc_list = 0
+"     let g:syntastic_auto_jump = 0
+"     let g:syntastic_loc_list_height = 5
+" 
+"     function! ToggleErrors()
+"         let old_last_winnr = winnr('$')
+"         lclose
+"         if old_last_winnr == winnr('$')
+"             " Nothing was closed, open syntastic_error location panel
+"             Errors
+"         endif
+"     endfunction
+"     nnoremap <Leader>s :call ToggleErrors()<cr>
+" 
+"     " ,en ,ep to jump between errors
+"     function! <SID>LocationPrevious()
+"     try
+"         lprev
+"     catch /^Vim\%((\a\+)\)\=:E553/
+"         llast
+"     endtry
+"     endfunction
+" 
+"     function! <SID>LocationNext()
+"     try
+"         lnext
+"     catch /^Vim\%((\a\+)\)\=:E553/
+"         lfirst
+"     endtry
+"     endfunction
+" 
+"     nnoremap <silent> <Plug>LocationPrevious    :<C-u>exe 'call <SID>LocationPrevious()'<CR>
+"     nnoremap <silent> <Plug>LocationNext        :<C-u>exe 'call <SID>LocationNext()'<CR>
+"     nmap <silent> <Leader>ep    <Plug>LocationPrevious
+"     nmap <silent> <Leader>en    <Plug>LocationNext
+" 
+"     " 修改高亮的背景色, 适应主题
+"     highlight SyntasticErrorSign guifg=white guibg=black
+" 
+"     " 禁止插件检查java
+"     " thanks to @marsqing, see https://github.com/wklken/k-vim/issues/164
+"     let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java'] }
+" 
+"     " 关闭syntastic语法检查, 鼠标复制代码时用到, 防止把错误标志给复制了
+"     nnoremap <silent> <Leader>ec :SyntasticToggleMode<CR>
+" endif
+" " }}}
 
 
 " ale {{{
@@ -391,8 +398,8 @@ if has_key(g:plugs, 'ale')
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
-    nmap <silent> <Leader>ep <Plug>(ale_previous_wrap)
-    nmap <silent> <Leader>en <Plug>(ale_next_wrap)
+    nmap <silent> <C-j> <Plug>(ale_previous_wrap)
+    nmap <silent> <C-k> <Plug>(ale_next_wrap)
 
     nnoremap <silent> <Leader>ec :ALEToggle<CR>
 
@@ -422,24 +429,26 @@ endif
     let g:ycm_key_list_select_completion = ['<Down>']
     "let g:ycm_key_list_previous_completion=['<c-p>']
     let g:ycm_key_list_previous_completion = ['<Up>']
-    let g:ycm_complete_in_comments = 1  "在注释输入中也能补全
+    let g:ycm_complete_in_comments = 0  "在注释输入中也能补全
     let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
-    let g:ycm_use_ultisnips_completer = 1 "提示UltiSnips
-    let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
-    let g:ycm_collect_identifiers_from_tags_files = 1
+    let g:ycm_use_ultisnips_completer = 0 "提示UltiSnips
+    let g:ycm_collect_identifiers_from_comments_and_strings = 0   "注释和字符串中的文字也会被收入补全
+    let g:ycm_collect_identifiers_from_tags_files = 0
     " 开启语法关键字补全
     let g:ycm_seed_identifiers_with_syntax=1
     " 回车作为选中
     let g:ycm_key_list_stop_completion = ['<CR>']
 
-    "let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
-
     " 跳转到定义处, 分屏打开
-    let g:ycm_goto_buffer_command = 'horizontal-split'
+    " let g:ycm_goto_buffer_command = 'horizontal-split'
+    let g:ycm_goto_buffer_command = 'vertical-split'
     let g:ycm_register_as_syntastic_checker = 0
     " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
     nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
     nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
+    nnoremap <leader>gi :YcmCompleter GoToImplementionOrDeclaration<CR>
+    nnoremap <leader>gt :YcmCompleter GetTypeImprecise<CR>
+    nnoremap <leader>gp :YcmCompleter GetParent<CR>
 
     " 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
     " old version
@@ -451,6 +460,9 @@ endif
         let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
     endif
 
+    let g:ycm_confirm_extra_conf = 0
+    let g:ycm_max_num_candidates = 10
+
     " 直接触发自动补全 insert模式下
     " let g:ycm_key_invoke_completion = '<C-Space>'
     " 黑名单,不启用
@@ -459,6 +471,13 @@ endif
         \ 'gitcommit' : 1,
         \}
 " }}}
+
+" ClangFormat {{{
+    let g:clang_format#style_options = "file"
+" }}}
+" map to <Leader>cf in C++ code
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 
 
 " ultisnips {{{
@@ -591,9 +610,9 @@ endif
         \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
         \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
         \ }
-    let g:ctrlp_working_path_mode=0
+    let g:ctrlp_working_path_mode='ra'
     let g:ctrlp_match_window_bottom=1
-    let g:ctrlp_max_height=15
+    let g:ctrlp_max_height=5
     let g:ctrlp_match_window_reversed=0
     let g:ctrlp_mruf_max=500
     let g:ctrlp_follow_symlinks=1
@@ -605,14 +624,14 @@ endif
     " let g:ctrlp_use_caching = 0
     " endif
 
-    " ctrlpfunky
-    " ctrlp插件1 - 不用ctag进行函数快速跳转
-    nnoremap <Leader>fu :CtrlPFunky<Cr>
-    " narrow the list down with a word under cursor
-    nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-    let g:ctrlp_funky_syntax_highlight = 1
+    "" ctrlpfunky
+    "" ctrlp插件1 - 不用ctag进行函数快速跳转
+    "nnoremap <Leader>fu :CtrlPFunky<Cr>
+    "" narrow the list down with a word under cursor
+    "nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+    "let g:ctrlp_funky_syntax_highlight = 1
 
-    let g:ctrlp_extensions = ['funky']
+    "let g:ctrlp_extensions = ['funky']
 " }}}
 
 
@@ -641,7 +660,7 @@ endif
 
 " fugitive {{{
     " :Gdiff  :Gstatus :Gvsplit
-    nnoremap <leader>ge :Gdiff<CR>
+    nnoremap <leader>df :Gdiff<CR>
     " not ready to open
     " <leader>gb maps to :Gblame<CR>
     " <leader>gs maps to :Gstatus<CR>
@@ -655,8 +674,8 @@ endif
     " 同git diff,实时展示文件中修改的行
     " 只是不喜欢除了行号多一列, 默认关闭,gs时打开
     let g:gitgutter_map_keys = 0
-    let g:gitgutter_enabled = 0
-    let g:gitgutter_highlight_lines = 1
+    let g:gitgutter_enabled = 1
+    let g:gitgutter_highlight_lines = 0
     nnoremap <leader>gs :GitGutterToggle<CR>
 " }}}
 
@@ -676,8 +695,10 @@ endif
     let g:airline_right_alt_sep = '❮'
     let g:airline_symbols.linenr = '¶'
     let g:airline_symbols.branch = '⎇'
-    " 是否打开tabline
-    " let g:airline#extensions#tabline#enabled = 1
+
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline_solarized_bg='dark'
+    let g:airline_theme='minimalist'
 " }}}
 
 
@@ -747,7 +768,7 @@ endif
     " let g:nerdtree_tabs_synchronize_focus=0
     " 是否自动开启nerdtree
     " thank to @ListenerRi, see https://github.com/wklken/k-vim/issues/165
-    let g:nerdtree_tabs_open_on_console_startup=0
+    let g:nerdtree_tabs_open_on_console_startup=1
     let g:nerdtree_tabs_open_on_gui_startup=0
 " }}}
 

@@ -24,6 +24,10 @@
 " Initial Plugin 加载插件
 "==========================================
 
+set tags=./tags;,tags;
+"nnoremap <C-]> g<C-]>
+nnoremap <C-]> :YcmComplete GoTo<CR>
+
 " 修改leader键
 let mapleader = ','
 let g:mapleader = ','
@@ -92,14 +96,14 @@ set noswapfile
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 " 突出显示当前列
-set cursorcolumn
+" set cursorcolumn
 " 突出显示当前行
 set cursorline
 
 
 " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
 " 好处：误删什么的，如果以前屏幕打开，可以找回
-set t_ti= t_te=
+" set t_ti= t_te=
 
 
 " 鼠标暂不启用, 键盘党....
@@ -175,7 +179,7 @@ set ignorecase
 set smartcase
 
 " 代码折叠
-set foldenable
+" set foldenable
 " 折叠方法
 " manual    手工折叠
 " indent    使用缩进表示折叠
@@ -183,20 +187,20 @@ set foldenable
 " syntax    使用语法定义折叠
 " diff      对没有更改的文本进行折叠
 " marker    使用标记进行折叠, 默认标记是 {{{ 和 }}}
-set foldmethod=indent
-set foldlevel=99
+" set foldmethod=indent
+" set foldlevel=99
 " 代码折叠自定义快捷键 <leader>zz
-let g:FoldMethod = 0
-map <leader>zz :call ToggleFold()<cr>
-fun! ToggleFold()
-    if g:FoldMethod == 0
-        exe "normal! zM"
-        let g:FoldMethod = 1
-    else
-        exe "normal! zR"
-        let g:FoldMethod = 0
-    endif
-endfun
+" let g:FoldMethod = 0
+" map <leader>zz :call ToggleFold()<cr>
+" fun! ToggleFold()
+"     if g:FoldMethod == 0
+"         exe "normal! zM"
+"         let g:FoldMethod = 1
+"     else
+"         exe "normal! zR"
+"         let g:FoldMethod = 0
+"     endif
+" endfun
 
 " 缩进配置
 " Smart indent
@@ -227,21 +231,21 @@ set ttyfast
 " 00x增减数字时使用十进制
 set nrformats=
 
-" 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
-set relativenumber number
-au FocusLost * :set norelativenumber number
-au FocusGained * :set relativenumber
-" 插入模式下用绝对行号, 普通模式下用相对
-autocmd InsertEnter * :set norelativenumber number
-autocmd InsertLeave * :set relativenumber
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set norelativenumber number
-  else
-    set relativenumber
-  endif
-endfunc
-nnoremap <C-n> :call NumberToggle()<cr>
+" " 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
+" set relativenumber number
+" au FocusLost * :set norelativenumber number
+" au FocusGained * :set relativenumber
+" " 插入模式下用绝对行号, 普通模式下用相对
+" autocmd InsertEnter * :set norelativenumber number
+" autocmd InsertLeave * :set relativenumber
+" function! NumberToggle()
+"   if(&relativenumber == 1)
+"     set norelativenumber number
+"   else
+"     set relativenumber
+"   endif
+" endfunc
+" nnoremap <C-n> :call NumberToggle()<cr>
 
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
@@ -297,12 +301,12 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " 回车即选中当前项
 inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
 
-" In the quickfix window, <CR> is used to jump to the error under the
-" cursor, so undefine the mapping there.
-autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
-" quickfix window  s/v to open in split window,  ,gd/,jd => quickfix window => open it
-autocmd BufReadPost quickfix nnoremap <buffer> v <C-w><Enter><C-w>L
-autocmd BufReadPost quickfix nnoremap <buffer> s <C-w><Enter><C-w>K
+" " In the quickfix window, <CR> is used to jump to the error under the
+" " cursor, so undefine the mapping there.
+" autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+" " quickfix window  s/v to open in split window,  ,gd/,jd => quickfix window => open it
+" autocmd BufReadPost quickfix nnoremap <buffer> v <C-w><Enter><C-w>L
+" autocmd BufReadPost quickfix nnoremap <buffer> s <C-w><Enter><C-w>K
 
 " command-line window
 autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
@@ -348,11 +352,11 @@ noremap <F1> <Esc>"
 " 为方便复制，用<F2>开启/关闭行号显示:
 function! HideNumber()
   if(&relativenumber == &number)
-    set relativenumber! number!
+    set number! "relativenumber! number!
   elseif(&number)
     set number!
-  else
-    set relativenumber!
+  "else
+    "set relativenumber!
   endif
   set number?
 endfunc
@@ -414,14 +418,14 @@ noremap L $
 
 
 " Map ; to : and save a million keystrokes 用于快速进入命令行
-nnoremap ; :
+" nnoremap ; :
 
 
-" 命令行模式增强，ctrl - a到行首， -e 到行尾
-cnoremap <C-j> <t_kd>
-cnoremap <C-k> <t_ku>
-cnoremap <C-a> <Home>
-cnoremap <C-e> <End>
+" " 命令行模式增强，ctrl - a到行首， -e 到行尾
+" cnoremap <C-j> <t_kd>
+" cnoremap <C-k> <t_ku>
+" cnoremap <C-a> <Home>
+" cnoremap <C-e> <End>
 
 
 " 搜索相关
@@ -520,7 +524,7 @@ vnoremap <leader>y "+y
 " nnoremap <silent> p p`]
 
 " select all
-map <Leader>sa ggVG
+" map <Leader>sa ggVG
 
 " 选中并高亮最后一次插入的内容
 nnoremap gv `[v`]
@@ -532,7 +536,7 @@ nnoremap <leader>v V`}
 cmap w!! w !sudo tee >/dev/null %
 
 " kj 替换 Esc
-inoremap kj <Esc>
+" inoremap kj <Esc>
 
 " 滚动Speed up scrolling of the viewport slightly
 nnoremap <C-e> 2<C-e>
@@ -544,26 +548,9 @@ nnoremap <C-y> 2<C-y>
 "nmap t o<ESC>k
 "nmap T O<ESC>j
 
-" Quickly close the current window
-nnoremap <leader>q :q<CR>
-
-" Quickly save the current file
-nnoremap <leader>w :w<CR>
-
 " 交换 ' `, 使得可以快速使用'跳到marked位置
 nnoremap ' `
 nnoremap ` '
-
-" remap U to <C-r> for easier redo
-nnoremap U <C-r>
-
-" Quickly edit/reload the vimrc file
-" nmap <silent> <leader>ev :e $MYVIMRC<CR>
-" nmap <silent> <leader>sv :so $MYVIMRC<CR>
-" edit vimrc/zshrc and load vimrc bindings
-nnoremap <leader>ev :vsp $MYVIMRC<CR>
-nnoremap <leader>ez :vsp ~/.zshrc<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
 
 "==========================================
 " FileType Settings  文件类型设置
@@ -578,8 +565,6 @@ autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2
 
 " disable showmatch when use > in php
 au BufWinEnter *.php set mps-=<:>
-
-
 
 " 保存python文件时删除多余空格
 fun! <SID>StripTrailingWhitespaces()
