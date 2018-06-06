@@ -34,6 +34,41 @@ Plug 'rhysd/vim-clang-format'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'shaneharper/vim-rtags'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'reedes/vim-lexical'
+
+" vim-cpp-enhanced-highlight {{
+
+    let g:cpp_class_scope_highlight = 1
+    let g:cpp_member_variable_highlight = 1
+    let g:cpp_class_decl_highlight = 1
+    let g:cpp_experimental_template_highlight = 1
+    let g:cpp_concepts_highlight = 1
+    let g:cpp_no_function_highlight = 1
+
+" }}}
+"
+" vim-lexical {{{
+
+""    augroup lexical
+""      autocmd!
+""      autocmd FileType markdown,mkd call lexical#init()
+""      autocmd FileType textile call lexical#init()
+""      autocmd FileType cpp call lexical#init()
+""      autocmd FileType text call lexical#init({ 'spell': 0 })
+""    augroup END
+""
+""    " Ignore CamelCase words when spell checking
+""    fun! IgnoreCamelCaseSpell()
+""      syn match CamelCase /\<[A-Z][a-z]\+[A-Z].\{-}\>/ contains=@NoSpell transparent
+""      syn match CamelCaseS /\<[a-z]\+[A-Z].\{-}\>/ contains=@NoSpell transparent
+""      syn cluster Spell add=CamelCase,CamelCaseS
+""    endfun
+""    autocmd BufRead,BufNewFile * :call IgnoreCamelCaseSpell()
+""
+""    let g:lexical#spellfile = ['~/.vim/spell/en.utf-8.add', '~/.vim/spell/fromtags.utf-8.add']
+
+" }}}
+
 """"""""""""""""""""""""""""""""
 
 " syntastic
@@ -100,24 +135,15 @@ Plug 'vim-scripts/matchit.zip'
 " multiplecursors
 Plug 'terryma/vim-multiple-cursors'
 
-" quick locate file or function
-" 文件搜索
-" change to https://github.com/ctrlpvim/ctrlp.vim
-" ctrlp ctrlpfunky
-Plug 'ctrlpvim/ctrlp.vim' "| Plug 'tacahiroy/ctrlp-funky'
-" ctrlsf
-" 类似sublimetext的搜索
-" In CtrlSF window:
-" 回车/o, 打开
-" t       在tab中打开(建议)
-" T - Lkie t but focus CtrlSF window instead of opened new tab.
+Plug 'ctrlpvim/ctrlp.vim'
+
 " q - Quit CtrlSF window.
 Plug 'dyng/ctrlsf.vim'
 " incsearch
-" Plug 'haya14busa/incsearch.vim'
-" map /  <Plug>(incsearch-forward)
-" map ?  <Plug>(incsearch-backward)
-" map g/ <Plug>(incsearch-stay)
+Plug 'haya14busa/incsearch.vim'
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
 
 " quick run
 " quickrun
@@ -152,6 +178,7 @@ Plug 'tomasr/molokai'
 " nav
 " nerdtree nerdtreetabs
 Plug 'scrooloose/nerdtree' | Plug 'jistr/vim-nerdtree-tabs'
+Plug 'unkiwii/vim-nerdtree-sync'
 " ctrlspace
 Plug 'vim-ctrlspace/vim-ctrlspace'
 " tagbar
@@ -449,6 +476,8 @@ endif
     nnoremap <leader>gi :YcmCompleter GoToImplementionOrDeclaration<CR>
     nnoremap <leader>gt :YcmCompleter GetTypeImprecise<CR>
     nnoremap <leader>gp :YcmCompleter GetParent<CR>
+    nnoremap <leader>dc :YcmCompleter GetDoc<CR>
+    nnoremap <leader>fi :YcmCompleter FixIt<CR>
 
     " 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
     " old version
@@ -764,12 +793,15 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
     " nerdtreetabs
     map <Leader>n <plug>NERDTreeTabsToggle<CR>
     " 关闭同步
-    " let g:nerdtree_tabs_synchronize_view=0
+    let g:nerdtree_tabs_synchronize_view=1
     " let g:nerdtree_tabs_synchronize_focus=0
     " 是否自动开启nerdtree
     " thank to @ListenerRi, see https://github.com/wklken/k-vim/issues/165
     let g:nerdtree_tabs_open_on_console_startup=1
     let g:nerdtree_tabs_open_on_gui_startup=0
+
+    " nerd tree sync
+    let g:nerdtree_sync_cursorline = 1
 " }}}
 
 
@@ -787,8 +819,8 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 " tagbar {{{
     nmap <F9> :TagbarToggle<CR>
     let g:tagbar_autofocus = 1
-    " let g:tagbar_autoshowtag = 1
-    " let g:tagbar_show_visibility = 1
+    let g:tagbar_autoshowtag = 1
+    let g:tagbar_show_visibility = 1
     " for ruby
     let g:tagbar_type_ruby = {
         \ 'kinds' : [
