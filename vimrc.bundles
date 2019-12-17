@@ -34,6 +34,8 @@ Plug 'rhysd/vim-clang-format'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'shaneharper/vim-rtags'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'vim-scripts/a.vim'
+Plug 'davidhalter/jedi-vim'
 " Plug 'reedes/vim-lexical'
 
 " vim-cpp-enhanced-highlight {{
@@ -75,7 +77,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 if v:version < 800
     Plug 'scrooloose/syntastic'
 else
-    Plug 'w0rp/ale'
+    " Plug 'w0rp/ale'
 endif
 
 " Group dependencies, vim-snippets depends on ultisnips
@@ -316,10 +318,7 @@ if count(g:bundle_groups, 'beta')
 
     " Plug 'ConradIrwin/vim-bracketed-paste'
     " Plug 'roxma/vim-paste-easy'
-
-
 endif
-
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -404,47 +403,47 @@ call plug#end()
 
 
 " ale {{{
-if has_key(g:plugs, 'ale')
-    " pip install flake8
-    " npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard
-    " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
-    let g:ale_linters = {
-    \   'python': ['flake8'],
-    \   'javascript': ['eslint'],
-    \}
-
-    " E501 -> 120 chars
-    let g:ale_python_flake8_args="--ignore=E114,E116,E131 --max-line-length=120"
-    " --ignore=E225,E124,E712,E116
-
-    let g:ale_sign_error = '>>'
-    let g:ale_sign_warning = '>'
-
-    let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
-    let g:ale_echo_msg_error_str = 'E'
-    let g:ale_echo_msg_warning_str = 'W'
-    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-
-    nmap <silent> <C-j> <Plug>(ale_previous_wrap)
-    nmap <silent> <C-k> <Plug>(ale_next_wrap)
-
-    nnoremap <silent> <Leader>ec :ALEToggle<CR>
-
-    " troggle quickfix list
-    function! ToggleErrors()
-        let old_last_winnr = winnr('$')
-        lclose
-        if old_last_winnr == winnr('$')
-            " Nothing was closed, open syntastic_error location panel
-            lopen
-        endif
-    endfunction
-    nnoremap <Leader>s :call ToggleErrors()<cr>
-
-    let g:ale_set_highlights = 1
-    highlight clear ALEErrorSign
-    highlight clear ALEWarningSign
-endif
+" if has_key(g:plugs, 'ale')
+"     " pip install flake8
+"     " npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard
+"     " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
+"     let g:ale_linters = {
+"     \   'python': ['flake8'],
+"     \   'javascript': ['eslint'],
+"     \}
+" 
+"     " E501 -> 120 chars
+"     let g:ale_python_flake8_args="--ignore=E114,E116,E131 --max-line-length=120"
+"     " --ignore=E225,E124,E712,E116
+" 
+"     let g:ale_sign_error = '>>'
+"     let g:ale_sign_warning = '>'
+" 
+"     let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+"     let g:ale_echo_msg_error_str = 'E'
+"     let g:ale_echo_msg_warning_str = 'W'
+"     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+" 
+"     nmap <silent> <C-j> <Plug>(ale_previous_wrap)
+"     nmap <silent> <C-k> <Plug>(ale_next_wrap)
+" 
+"     nnoremap <silent> <Leader>ec :ALEToggle<CR>
+" 
+"     " troggle quickfix list
+"     function! ToggleErrors()
+"         let old_last_winnr = winnr('$')
+"         lclose
+"         if old_last_winnr == winnr('$')
+"             " Nothing was closed, open syntastic_error location panel
+"             lopen
+"         endif
+"     endfunction
+"     nnoremap <Leader>s :call ToggleErrors()<cr>
+" 
+"     let g:ale_set_highlights = 1
+"     highlight clear ALEErrorSign
+"     highlight clear ALEWarningSign
+" endif
 
 " }}}
 
@@ -459,8 +458,8 @@ endif
     let g:ycm_complete_in_comments = 0  "在注释输入中也能补全
     let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
     let g:ycm_use_ultisnips_completer = 0 "提示UltiSnips
-    let g:ycm_collect_identifiers_from_comments_and_strings = 0   "注释和字符串中的文字也会被收入补全
-    let g:ycm_collect_identifiers_from_tags_files = 0
+    let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
+    let g:ycm_collect_identifiers_from_tags_files = 1
     " 开启语法关键字补全
     let g:ycm_seed_identifiers_with_syntax=1
     " 回车作为选中
@@ -469,7 +468,7 @@ endif
     " 跳转到定义处, 分屏打开
     " let g:ycm_goto_buffer_command = 'horizontal-split'
     let g:ycm_goto_buffer_command = 'vertical-split'
-    let g:ycm_register_as_syntastic_checker = 0
+    " let g:ycm_register_as_syntastic_checker = 0
     " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
     nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
     nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
@@ -479,10 +478,13 @@ endif
     nnoremap <leader>dc :YcmCompleter GetDoc<CR>
     nnoremap <leader>fi :YcmCompleter FixIt<CR>
 
+    if !empty(glob("/home/ANT.AMAZON.COM/stevsong/workspace/spex/src/Spex/.ycm_extra_conf.py"))
+        let g:ycm_global_ycm_extra_conf = "/home/ANT.AMAZON.COM/stevsong/workspace/spex/src/Spex/.ycm_extra_conf.py"
+    endif
     " 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
     " old version
-    if !empty(glob("~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"))
-        let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"
+    if !empty(glob("~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"))
+        let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"
     endif
     " new version
     if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"))
@@ -490,7 +492,7 @@ endif
     endif
 
     let g:ycm_confirm_extra_conf = 0
-    let g:ycm_max_num_candidates = 10
+    let g:ycm_max_num_candidates = 20
 
     " 直接触发自动补全 insert模式下
     " let g:ycm_key_invoke_completion = '<C-Space>'
@@ -580,14 +582,14 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 " ################### 快速移动 ###################
 
 " easymotion {{{
-    let g:EasyMotion_smartcase = 1
-    "let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
-    map <Leader><leader>h <Plug>(easymotion-linebackward)
-    map <Leader><Leader>j <Plug>(easymotion-j)
-    map <Leader><Leader>k <Plug>(easymotion-k)
-    map <Leader><leader>l <Plug>(easymotion-lineforward)
-    " 重复上一次操作, 类似repeat插件, 很强大
-    map <Leader><leader>. <Plug>(easymotion-repeat)
+    " let g:EasyMotion_smartcase = 1
+    " "let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
+    " map <Leader><leader>h <Plug>(easymotion-linebackward)
+    " map <Leader><Leader>j <Plug>(easymotion-j)
+    " map <Leader><Leader>k <Plug>(easymotion-k)
+    " map <Leader><leader>l <Plug>(easymotion-lineforward)
+    " " 重复上一次操作, 类似repeat插件, 很强大
+    " map <Leader><leader>. <Plug>(easymotion-repeat)
 " }}}
 
 
@@ -691,7 +693,7 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
     " :Gdiff  :Gstatus :Gvsplit
     nnoremap <leader>df :Gdiff<CR>
     " not ready to open
-    " <leader>gb maps to :Gblame<CR>
+    " noremap <leader>gb :Gblame<CR>
     " <leader>gs maps to :Gstatus<CR>
     " <leader>gd maps to :Gdiff<CR>  和现有冲突
     " <leader>gl maps to :Glog<CR>
