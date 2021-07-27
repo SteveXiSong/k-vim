@@ -617,7 +617,6 @@ endif
 " https://dougblack.io/words/a-good-vimrc.html
 set lazyredraw          " redraw only when we need to.
 
-
 "==========================================
 " Theme Settings  主题设置
 "==========================================
@@ -638,7 +637,6 @@ if has("gui_running")
     set noimd
     set t_Co=256
 endif
-
 
 
 " theme主题

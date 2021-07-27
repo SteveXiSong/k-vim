@@ -74,11 +74,11 @@ Plug 'davidhalter/jedi-vim'
 """"""""""""""""""""""""""""""""
 
 " syntastic
-if v:version < 800
-    Plug 'scrooloose/syntastic'
-else
-    " Plug 'w0rp/ale'
-endif
+"if v:version < 800
+" Plug 'scrooloose/syntastic'
+"else
+" Plug 'w0rp/ale'
+"endif
 
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
@@ -477,19 +477,7 @@ call plug#end()
     nnoremap <leader>gp :YcmCompleter GetParent<CR>
     nnoremap <leader>dc :YcmCompleter GetDoc<CR>
     nnoremap <leader>fi :YcmCompleter FixIt<CR>
-
-    if !empty(glob("/home/ANT.AMAZON.COM/stevsong/workspace/spex/src/Spex/.ycm_extra_conf.py"))
-        let g:ycm_global_ycm_extra_conf = "/home/ANT.AMAZON.COM/stevsong/workspace/spex/src/Spex/.ycm_extra_conf.py"
-    endif
-    " 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
-    " old version
-    if !empty(glob("~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"))
-        let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"
-    endif
-    " new version
-    if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"))
-        let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
-    endif
+    nnoremap <leader>gr :YcmCompleter GoToReferences<CR>
 
     let g:ycm_confirm_extra_conf = 0
     let g:ycm_max_num_candidates = 20
@@ -501,6 +489,12 @@ call plug#end()
         \ 'tagbar' : 1,
         \ 'gitcommit' : 1,
         \}
+
+    " Let clangd fully control code completion
+    let g:ycm_clangd_uses_ycmd_caching = 0
+    " Use installed clangd, not YCM-bundled clangd which doesn't get updates.
+    let g:ycm_clangd_binary_path = exepath("clangd")
+
 " }}}
 
 " ClangFormat {{{
